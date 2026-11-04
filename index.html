@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f6e5d">
+<title>الإعداد لاختبار الجاهزية | قسم المحاسبة</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+</head>
+<body>
+
+<header class="appbar">
+  <div class="appbar-inner">
+    <div class="brand" id="app-brand">الإعداد لاختبار الجاهزية 5
+      <small id="app-brand-sub">قسم المحاسبة — د. محمد صالح باجاحر</small>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button id="btn-logout" class="iconbtn hidden" title="إنهاء الجلسة">🚪</button>
+      <button id="btn-theme" class="iconbtn" title="الوضع الليلي/النهاري">🌙</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- شريط وضع معاينة المعلم -->
+  <div id="preview-bar" class="preview-bar hidden">
+    <span>👁 <b>وضع المعاينة</b> — أنت تستعرض الاختبار كما يراه الطالب، ولن تُحفظ النتيجة في الكشف.</span>
+    <button id="btn-exit-preview" class="minibtn">العودة للوحة المعلم</button>
+  </div>
+
+  <!-- ============ شاشة الدخول والتسجيل ============ -->
+  <section id="screen-gate">
+    <div class="card hero">
+      <div class="logo">🔐</div>
+      <h1 id="g-title">الإعداد لاختبار الجاهزية 5</h1>
+      <div class="sub" id="g-course"></div>
+      <div class="sub">يُرجى تسجيل بياناتك بالكامل ثم إدخال كلمة المرور للدخول</div>
+    </div>
+
+    <div class="card">
+      <div class="role-tabs" id="role-tabs">
+        <button type="button" class="role-tab active" data-role="student">🎓 دخول الطلاب</button>
+        <button type="button" class="role-tab" data-role="admin">🧑‍🏫 دخول المعلم</button>
+      </div>
+
+      <form id="gate-form" autocomplete="off" novalidate>
+        <div class="field stu-only">
+          <label for="g-name">الاسم الثلاثي <span class="req">*</span></label>
+          <input id="g-name" class="fillin" type="text" placeholder="مثال: محمد أحمد الشهري" autocomplete="name">
+        </div>
+
+        <div class="field">
+          <label for="g-email">البريد الإلكتروني الجامعي <span class="req">*</span></label>
+          <input id="g-email" class="fillin" type="email" dir="ltr" style="text-align:left"
+                 placeholder="441234567@kku.edu.sa" autocomplete="email">
+          <small class="hint" id="g-email-hint"></small>
+        </div>
+
+        <div class="field stu-only" id="g-sid-wrap">
+          <label for="g-sid">الرقم الجامعي <span class="req">*</span></label>
+          <input id="g-sid" class="fillin" type="text" inputmode="numeric" dir="ltr"
+                 style="text-align:left" placeholder="4xxxxxxxx">
+        </div>
+
+        <div class="field">
+          <label for="g-pass">كلمة مرور الاختبار <span class="req">*</span></label>
+          <input id="g-pass" class="fillin" type="password" dir="ltr" style="text-align:left"
+                 placeholder="أدخل كلمة المرور" autocomplete="off">
+        </div>
+
+        <div id="g-error" class="gate-error hidden"></div>
+
+        <button type="submit" id="btn-login" class="btn btn-primary btn-block" style="margin-top:6px">
+          🔓 تسجيل الدخول وبدء الاختبار
+        </button>
+      </form>
+    </div>
+
+    <div class="card stu-only" style="font-size:.8rem;color:var(--muted)">
+      <b style="color:var(--text)">إقرار الأمانة العلمية:</b>
+      بدخولك إلى هذا الاختبار تقرّ بأنك ستؤديه بنفسك دون مساعدة من أي شخص أو مصدر خارجي،
+      وأن البيانات المدخلة أعلاه صحيحة، وأنها ستُرفق مع نتيجتك عند التسليم.
+    </div>
+  </section>
+
+  <!-- ============ لوحة المعلم (المسؤول) ============ -->
+  <section id="screen-admin" class="hidden">
+    <div class="card admin-hero">
+      <div>
+        <h2 style="margin:0 0 4px;font-size:1.05rem">🧑‍🏫 لوحة المعلم</h2>
+        <div style="font-size:.78rem;color:var(--muted)" id="adm-who"></div>
+      </div>
+      <span class="pill ok">صلاحيات كاملة</span>
+    </div>
+
+    <button id="btn-preview-exam" class="btn btn-outline btn-block" style="margin-bottom:12px">
+      👁 دخول الاختبار كطالب (معاينة)
+    </button>
+
+    <div class="admin-tabs" id="admin-tabs">
+      <button class="atab active" data-tab="settings">⚙️ الإعدادات</button>
+      <button class="atab" data-tab="blueprint">🧩 بناء الاختبارات</button>
+      <button class="atab" data-tab="questions">✏️ الأسئلة</button>
+      <button class="atab" data-tab="results">📊 النتائج</button>
+      <button class="atab" data-tab="bank">📚 بنك الأسئلة</button>
+    </div>
+
+    <!-- تبويب بناء الاختبارات -->
+    <div class="atab-pane hidden" id="pane-blueprint">
+
+      <!-- ===== (أ) اختبار الوحدة — الاختبار الفردي ===== -->
+      <div class="card">
+        <div class="sec-head">
+          <div class="sec-icon unit">📗</div>
+          <div>
+            <b style="font-size:.95rem">اختبار الوحدة (الاختبار الفردي)</b>
+            <div class="adm-note" style="margin:2px 0 0">
+              اختر الوحدة المعرفية، ثم حدّد أنواع الأسئلة وعددها ومدة الاختبار الخاصة بها.
+            </div>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:14px">
+          <label for="u-select">قائمة الوحدات المعرفية</label>
+          <select id="u-select" class="fillin"></select>
+          <small class="hint" id="u-avail"></small>
+        </div>
+
+        <div class="field">
+          <label>أنواع الأسئلة في هذه الوحدة</label>
+          <div id="u-types" class="chk-row"></div>
+          <small class="hint">تُظهر الأرقام عدد الأسئلة المتاحة من كل نوع في هذه الوحدة.</small>
+        </div>
+
+        <div class="adm-grid">
+          <div class="field"><label>عدد أسئلة اختبار الوحدة</label><input id="u-q" class="fillin" type="number" min="5" max="200"></div>
+          <div class="field"><label>مدة الاختبار (دقيقة)</label><input id="u-d" class="fillin" type="number" min="5" max="300"></div>
+        </div>
+
+        <div class="adm-actions">
+          <button id="u-save" class="btn btn-primary">💾 حفظ إعدادات هذه الوحدة</button>
+          <button id="u-reset" class="btn btn-ghost">↩ إعادة الافتراضي للوحدة</button>
+        </div>
+        <div class="adm-note" id="u-note"></div>
+
+        <div style="margin-top:16px">
+          <b style="font-size:.85rem">ملخص إعدادات جميع الوحدات</b>
+          <div id="u-table" style="margin-top:8px;overflow-x:auto"></div>
+        </div>
+      </div>
+
+      <!-- ===== (ب) الاختبار الشامل ===== -->
+      <div class="card">
+        <div class="sec-head">
+          <div class="sec-icon comp">🎯</div>
+          <div>
+            <b style="font-size:.95rem">الاختبار الشامل (بأوزان معايير NCAAA)</b>
+            <div class="adm-note" style="margin:2px 0 0">
+              يوزّع الأسئلة على الوحدات بنسب أوزانها المعتمدة في وثيقة المعايير الأكاديمية لبرامج المحاسبة 2025.
+            </div>
+          </div>
+        </div>
+
+        <div class="adm-grid" style="margin-top:14px">
+          <div class="field"><label>إجمالي أسئلة الاختبار الشامل</label><input id="c-q" class="fillin" type="number" min="10" max="300"></div>
+          <div class="field"><label>المدة (دقيقة)</label><input id="c-d" class="fillin" type="number" min="10" max="300"></div>
+        </div>
+
+        <div id="bp-table" style="margin-top:6px;overflow-x:auto"></div>
+
+        <div class="adm-actions">
+          <button id="bp-save" class="btn btn-primary">💾 حفظ الأوزان والتوزيع</button>
+          <button id="bp-reset" class="btn btn-ghost">↩ استعادة أوزان NCAAA</button>
+          <button id="bp-preview" class="btn btn-outline">👁 معاينة التوزيع النهائي</button>
+        </div>
+        <div class="adm-note" id="bp-note"></div>
+        <div id="bp-preview-out" style="margin-top:10px;overflow-x:auto"></div>
+      </div>
+    </div>
+
+    <!-- تبويب الإعدادات -->
+    <div class="atab-pane" id="pane-settings">
+      <div class="card">
+        <b style="font-size:.9rem">إعدادات الاختبار</b>
+        <div class="adm-grid" style="margin-top:12px">
+          <div class="field"><label>عدد أسئلة اختبار الجزء</label><input id="s-pq" class="fillin" type="number" min="5" max="200"></div>
+          <div class="field"><label>مدة اختبار الجزء (دقيقة)</label><input id="s-pd" class="fillin" type="number" min="5" max="300"></div>
+          <div class="field"><label>عدد أسئلة الاختبار الشامل</label><input id="s-fq" class="fillin" type="number" min="5" max="200"></div>
+          <div class="field"><label>مدة الاختبار الشامل (دقيقة)</label><input id="s-fd" class="fillin" type="number" min="5" max="300"></div>
+          <div class="field"><label>درجة النجاح %</label><input id="s-pass" class="fillin" type="number" min="1" max="100"></div>
+          <div class="field"><label>نطاق البريد الجامعي</label><input id="s-domain" class="fillin" type="text" dir="ltr" style="text-align:left"></div>
+                  </div>
+        <div class="field" style="margin-top:4px">
+          <label>أنواع الأسئلة المسموحة</label>
+          <div id="s-types" class="chk-row"></div>
+        </div>
+        <div class="field">
+          <label>خيارات أخرى</label>
+          <div id="s-flags" class="chk-row"></div>
+        </div>
+        <div class="adm-actions">
+          <button id="s-save" class="btn btn-primary">💾 حفظ التعديلات</button>
+          <button id="s-reset" class="btn btn-ghost">↩ استعادة الافتراضي</button>
+          <button id="s-export" class="btn btn-outline">📤 تصدير config.js</button>
+        </div>
+        <div class="adm-note" id="s-note"></div>
+      </div>
+
+      <div class="card">
+        <b style="font-size:.9rem">🔑 كلمات المرور (تُنشر لجميع الطلاب)</b>
+        <div class="adm-note">اترك الحقل فارغًا للإبقاء على كلمة المرور الحالية. تظهر التغييرات للطلاب بعد نحو دقيقة من النشر.</div>
+        <div class="adm-grid" style="margin-top:12px">
+          <div class="field"><label>كلمة مرور الطلاب الجديدة</label><input id="s-spass" class="fillin" type="text" dir="ltr" style="text-align:left" autocomplete="off"></div>
+          <div class="field"><label>كلمة مرور المعلم الجديدة</label><input id="s-apass" class="fillin" type="text" dir="ltr" style="text-align:left" autocomplete="off"></div>
+          <div class="field"><label>رمز GitHub (مرة واحدة فقط)</label><input id="s-token" class="fillin" type="password" dir="ltr" style="text-align:left" autocomplete="off" placeholder="github_pat_..."></div>
+        </div>
+        <div class="adm-note">الرمز: GitHub ← Settings ← Developer settings ← Fine-grained tokens ← مستودع Jahaziah_5 فقط ← Contents: Read and write. يُحفظ على جهازك فقط ولا يُرسل لغير GitHub.</div>
+        <div class="adm-actions"><button id="s-publish" class="btn btn-primary">🔑 نشر كلمات المرور</button></div>
+        <div class="adm-note" id="p-note"></div>
+      </div>
+    </div>
+
+    <!-- تبويب الأسئلة -->
+    <div class="atab-pane hidden" id="pane-questions">
+      <div class="card">
+        <b style="font-size:.9rem" id="q-form-title">➕ إضافة سؤال جديد</b>
+        <div class="adm-grid" style="margin-top:12px">
+          <div class="field"><label>الجزء (الوحدة المعرفية)</label><select id="q-part" class="fillin"></select></div>
+          <div class="field"><label>الموضوع الفرعي</label><select id="q-topic" class="fillin"></select></div>
+          <div class="field"><label>نوع السؤال</label>
+            <select id="q-type" class="fillin">
+              <option value="mcq">اختيار من متعدد</option>
+              <option value="tf">صح / خطأ</option>
+              <option value="fill">أكمل الفراغ</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label>نص السؤال <span class="req">*</span></label>
+          <textarea id="q-text" class="fillin" rows="3" placeholder="اكتب نص السؤال هنا…"></textarea></div>
+
+        <div id="q-mcq-wrap">
+          <div class="field"><label>الخيارات <span class="req">*</span> — حدّد الإجابة الصحيحة</label>
+            <div id="q-opts"></div>
+          </div>
+        </div>
+        <div id="q-tf-wrap" class="field hidden">
+          <label>الإجابة الصحيحة</label>
+          <select id="q-tf" class="fillin"><option value="true">صحيحة</option><option value="false">خاطئة</option></select>
+        </div>
+        <div id="q-fill-wrap" class="field hidden">
+          <label>الإجابات المقبولة (افصل بينها بفاصلة)</label>
+          <input id="q-fill" class="fillin" type="text" placeholder="25, ٢٥, 25%">
+        </div>
+
+        <div class="field"><label>شرح الإجابة <span class="req">*</span></label>
+          <textarea id="q-expl" class="fillin" rows="2"></textarea></div>
+        <div class="field"><label>المرجع (المادة/الفصل)</label>
+          <input id="q-ref" class="fillin" type="text" placeholder="المادة 17 من النظام"></div>
+
+        <div class="adm-actions">
+          <button id="q-save" class="btn btn-primary">💾 حفظ السؤال</button>
+          <button id="q-cancel" class="btn btn-ghost hidden">إلغاء التعديل</button>
+          <button id="q-export" class="btn btn-outline">📤 تصدير questions.js</button>
+        </div>
+        <div class="adm-note" id="q-note"></div>
+      </div>
+
+      <div class="card">
+        <b style="font-size:.9rem">الأسئلة المضافة أو المعدَّلة محليًا</b>
+        <div id="q-local" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <!-- تبويب النتائج -->
+    <div class="atab-pane hidden" id="pane-results">
+      <div class="card">
+        <b style="font-size:.9rem">نتائج الطلاب</b>
+        <div class="adm-note" style="margin-top:6px">
+          تُعرض هنا المحاولات المسجَّلة على هذا الجهاز، ويمكنك استيراد ملفات النتائج (CSV) التي يرسلها الطلاب لتجميعها في كشف واحد.
+        </div>
+        <div class="adm-actions" style="margin-top:12px">
+          <label class="btn btn-outline" for="r-import" style="cursor:pointer">📥 استيراد نتائج طلاب (CSV)</label>
+          <input id="r-import" type="file" accept=".csv,text/csv" multiple class="hidden">
+          <button id="r-export" class="btn btn-primary">📤 تصدير الكشف (Excel)</button>
+          <button id="r-clear" class="btn btn-ghost">🗑 مسح الكشف</button>
+        </div>
+        <div id="r-table" style="margin-top:14px"></div>
+      </div>
+    </div>
+
+    <!-- تبويب بنك الأسئلة -->
+    <div class="atab-pane hidden" id="pane-bank">
+      <div class="card">
+        <div class="adm-grid">
+          <div class="field"><label>تصفية حسب الجزء</label><select id="b-part" class="fillin"></select></div>
+          <div class="field"><label>بحث في النص</label><input id="b-search" class="fillin" type="search" placeholder="كلمة في السؤال…"></div>
+        </div>
+        <div id="b-count" class="adm-note"></div>
+        <div id="b-list" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <button id="btn-admin-exit" class="btn btn-ghost btn-block" style="margin-top:10px">🚪 إنهاء جلسة المعلم</button>
+  </section>
+
+  <!-- ============ لوحة البداية ============ -->
+  <section id="screen-dash" class="hidden">
+    <div class="welcome">
+      <div class="welcome-text">
+        <div class="hello" id="d-hello">مرحبًا بك 👋</div>
+        <h1 id="d-course">الإعداد لاختبار الجاهزية</h1>
+        <div class="sub" id="d-instructor"></div>
+      </div>
+      <div class="welcome-badge">🎓</div>
+    </div>
+
+    <div class="card student-card" id="d-student"></div>
+
+    <div class="step-title"><span class="step-no">1</span> اختر نوع الاختبار</div>
+    <div id="mode-cards" class="mode-tiles"></div>
+
+    <div id="part-select-wrap" class="card scope-card hidden">
+      <label for="part-select" class="scope-label">📌 نطاق الاختبار</label>
+      <select id="part-select" class="fillin"></select>
+    </div>
+
+    <div class="step-title"><span class="step-no">2</span> اختر مستوى الصعوبة</div>
+    <div id="level-chips" class="level-chips"></div>
+
+    <div class="statgrid three">
+      <div class="stat"><div class="num" id="d-qn">—</div><div class="lbl">سؤالًا</div></div>
+      <div class="stat"><div class="num" id="d-dur">—</div><div class="lbl">مدة الاختبار</div></div>
+      <div class="stat"><div class="num" id="d-pass">—</div><div class="lbl">درجة النجاح</div></div>
+    </div>
+    <span id="d-bank" class="hidden"></span>
+    <span id="d-chapter" class="hidden"></span>
+    <div id="part-types" class="hidden"></div>
+
+    <button id="btn-start" class="btn btn-primary btn-block btn-big">🚀 ابدأ الاختبار الآن</button>
+
+    <div class="card progress-card">
+      <div class="progress-summary" id="d-progress"></div>
+    </div>
+    <button id="btn-clear" class="btn btn-ghost btn-block hidden" style="margin-top:10px">🗑 مسح سجل المحاولات</button>
+
+    <div class="card tips">
+      <b>💡 قبل أن تبدأ</b>
+      <ul>
+        <li>يتغير الاختبار في كل محاولة: ترتيب الأسئلة والخيارات وبعض الأرقام.</li>
+        <li>تنقّل بحرية بين الأسئلة، وعلّم أي سؤال للرجوع إليه لاحقًا.</li>
+        <li>يُسلَّم الاختبار تلقائيًا عند انتهاء الوقت.</li>
+        <li>بعد التسليم تحصل على تقرير مفصل وشرح لكل سؤال — استفد منه!</li>
+      </ul>
+    </div>
+
+    <!-- للمعلم فقط (تظهر في وضع المعاينة) -->
+    <div id="teacher-only" class="hidden">
+      <button id="btn-guide" class="btn btn-outline btn-block" style="margin-top:10px">🧭 دليل الوحدات المعرفية التخصصية (للمعلم)</button>
+      <div class="card hidden" id="blueprint-card">
+        <b style="font-size:.9rem">🎯 توزيع أسئلة الاختبار حسب أوزان المعيار (للمعلم)</b>
+        <div style="font-size:.75rem;color:var(--muted);margin:4px 0 10px" id="blueprint-note"></div>
+        <div id="blueprint" style="overflow-x:auto"></div>
+      </div>
+      <div class="card">
+        <b style="font-size:.9rem">خريطة الوحدات وعدد أسئلتها (للمعلم)</b>
+        <div style="font-size:.75rem;color:var(--muted);margin:4px 0 10px" id="cov-note"></div>
+        <div id="coverage"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ شاشة دليل الوحدات المعرفية ============ -->
+  <section id="screen-guide" class="hidden">
+    <button id="btn-guide-back" class="btn btn-outline btn-block">⬅ العودة للرئيسية</button>
+    <div id="guide-body"></div>
+    <div class="card gu-src">
+      المصدر: مصفوفة نواتج التعلم للوحدات المعرفية لطلاب المحاسبة وفقًا لجاهزية — المعايير الأكاديمية
+      لبرامج المحاسبة 2025 (الإصدار 2.0)، هيئة تقويم التعليم والتدريب. إعداد: الدكتور محمد صالح باجاحر.
+    </div>
+  </section>
+
+  <!-- ============ شاشة الاختبار ============ -->
+  <section id="screen-exam" class="hidden">
+    <div class="exam-top">
+      <span class="qcount" id="qcount">—</span>
+      <span class="timer" id="timer">60:00</span>
+    </div>
+    <div id="exam-scope" class="exam-scope"></div>
+    <div class="progressbar"><div id="pbar"></div></div>
+
+    <div class="card">
+      <div class="qmeta" id="qmeta"></div>
+      <div class="qtext" id="qtext"></div>
+      <div id="qbody"></div>
+
+      <div class="exam-nav">
+        <button id="btn-prev" class="btn btn-outline">➡ السابق</button>
+        <button id="btn-flag" class="btn btn-ghost btn-flag">☆ للمراجعة</button>
+        <button id="btn-skip" class="btn btn-ghost">تخطي</button>
+        <button id="btn-next" class="btn btn-primary">التالي ⬅</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <b style="font-size:.85rem">لوحة الأسئلة</b>
+      <div class="palette" id="palette"></div>
+      <div class="legend">
+        <span class="l-ans">تمت الإجابة</span>
+        <span class="l-flag">معلَّم للمراجعة</span>
+        <span>بدون إجابة</span>
+      </div>
+      <button id="btn-submit" class="btn btn-danger btn-block" style="margin-top:14px">✋ إنهاء وتسليم الاختبار</button>
+    </div>
+  </section>
+
+  <!-- ============ شاشة النتائج ============ -->
+  <section id="screen-result" class="hidden">
+    <div class="card student-card" id="r-student"></div>
+    <div class="card" style="text-align:center">
+      <p id="r-auto" class="hidden" style="color:var(--warn);font-weight:700">⏰ انتهى الوقت — تم تسليم الاختبار تلقائيًا</p>
+      <div class="score-ring" id="score-ring">
+        <div id="score-inner" style="background:var(--card);width:118px;height:118px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center"></div>
+      </div>
+      <div class="resgrid">
+        <div class="stat"><div class="num" style="color:var(--ok)" id="r-correct">0</div><div class="lbl">إجابات صحيحة</div></div>
+        <div class="stat"><div class="num" style="color:var(--bad)" id="r-wrong">0</div><div class="lbl">إجابات خاطئة</div></div>
+        <div class="stat"><div class="num" style="color:var(--warn)" id="r-skip">0</div><div class="lbl">أسئلة متروكة</div></div>
+        <div class="stat"><div class="num" id="r-time">00:00</div><div class="lbl">الوقت المستغرق</div></div>
+      </div>
+    </div>
+
+    <div class="card hidden" id="part-perf-card">
+      <b>الأداء حسب أجزاء المعيار (الوحدات المعرفية)</b>
+      <div id="part-perf" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card">
+      <b>الأداء حسب الموضوعات</b>
+      <div id="topic-perf" style="margin-top:12px"></div>
+    </div>
+
+    <button id="btn-review" class="btn btn-primary btn-block">📖 مراجعة الأسئلة والإجابات</button>
+    <button id="btn-export" class="btn btn-outline btn-block" style="margin-top:10px">📤 تصدير بطاقة النتيجة وإرسالها للمعلم</button>
+    <button id="btn-retry" class="btn btn-outline btn-block" style="margin-top:10px">🔄 اختبار جديد</button>
+    <button id="btn-home" class="btn btn-ghost btn-block" style="margin-top:10px">🏠 العودة للرئيسية</button>
+  </section>
+
+  <!-- ============ شاشة المراجعة ============ -->
+  <section id="screen-review" class="hidden">
+    <button id="btn-back-result" class="btn btn-outline btn-block">⬅ العودة للنتيجة</button>
+    <div id="review-list"></div>
+  </section>
+
+</main>
+
+<!-- مودال تأكيد التسليم -->
+<div id="modal" class="modal-backdrop hidden">
+  <div class="modal">
+    <h3>تسليم الاختبار</h3>
+    <p id="m-text"></p>
+    <div class="row">
+      <button id="m-cancel" class="btn btn-ghost">متابعة الحل</button>
+      <button id="m-ok" class="btn btn-danger">تسليم نهائي</button>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script src="units.js"></script>
+<script src="questions.js"></script>
+<script src="questions-7.1.js"></script>
+<script src="questions-7.2.js"></script>
+<script src="questions-7.3.js"></script>
+<script src="questions-7.4-zakat-vat.js"></script>
+<script src="questions-7.5.js"></script>
+<script src="questions-1.1.js"></script>
+<script src="questions-2.1.js"></script>
+<script src="questions-general.js"></script>
+<script src="questions-improved.js"></script>
+<script src="levels.js"></script>
+<script src="script.js"></script>
+<script src="admin.js"></script>
+<script src="guide.js"></script>
+</body>
+</html>
